@@ -178,9 +178,9 @@ def start_container(container_name, path_maps, command):
     """
 
     # Add standard path maps
-    path_maps.append((os.getcwd() + "/_obj/var/cache/mock", "/var/cache/mock"),
-                     (os.getcwd() + "/_obj/var/cache/yum", "/var/cache/yum"),
-                     (os.getcwd(), "/build"))
+    path_maps.append((os.getcwd() + "/_obj/var/cache/mock", "/var/cache/mock"))
+    path_maps.append((os.getcwd() + "/_obj/var/cache/yum", "/var/cache/yum"))
+    path_maps.append((os.getcwd(), "/build"))
     
 
     cmd = ["docker", "run", "--privileged", "--rm", "-i", "-t"]
