@@ -5,11 +5,12 @@ services:
 before_install:
     - docker build -t planex:$TRAVIS_BUILD_NUMBER .
     - docker run -d --name tester planex:$TRAVIS_BUILD_NUMBER
-    - docker exec tester pip install -r requirements.txt
-    - docker exec tester pip install -r test-requirements.txt
+    - docker exec tester "sudo yum install python-pip"
+      # - docker exec tester "sudo pip install -r requirements.txt"
+    - docker exec tester "sudo pip install -r test-requirements.txt"
 script:
-    - docker exec tester pep8 --show-source --show-pep8 setup.py planex tests
-    - docker exec tester pylint setup.py planex tests
-    - docker exec tester nosetests --verbose --with-coverage --cover-inclusive
+    - docker exec tester "pep8 --show-source --show-pep8 setup.py planex tests"
+    - docker exec tester "pylint setup.py planex tests"
+    - docker exec tester "nosetests --verbose --with-coverage --cover-inclusive"
 after_script:
     - docker rm -f tester
