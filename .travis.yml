@@ -1,16 +1,15 @@
 language: python
-virtualenv: 
-  system_site_packages: true
 sudo: false
-addons:
-  apt:
-    packages:
-    - yum
-    - python-rpm
-install:
-  - pip install -r requirements.txt
-  - pip install -r test-requirements.txt
-script: 
-  - pep8 --show-source --show-pep8 setup.py planex tests
-  - pylint setup.py planex tests
-  - nosetests --verbose --with-coverage --cover-inclusive
+services:
+    - docker
+before_install:
+    - docker build -t planex:$TRAVIS_BUILD_NUMBER .
+    - docker run -d --name tester planex:$TRAVIS_BUILD_NUMBER
+    - docker exec tester pip install -r requirements.txt
+    - docker exec tester pip install -r test-requirements.txt
+script:
+    - docker exec tester pep8 --show-source --show-pep8 setup.py planex tests
+    - docker exec tester pylint setup.py planex tests
+    - docker exec tester nosetests --verbose --with-coverage --cover-inclusive
+after_script:
+    - docker rm -f tester
